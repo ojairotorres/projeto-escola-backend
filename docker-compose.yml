@@ -1,0 +1,28 @@
+services:
+  postgres-management:
+    image: postgres:15.3-alpine
+    container_name: postgres-management
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: escola_management_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - ./volumes/postgres-data:/var/lib/postgresql/data
+    networks:
+      - escola-network
+
+  management-api:
+    build: ./management-api
+    container_name: management-api
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres-management
+    networks:
+      - escola-network
+
+networks:
+  escola-network:
+    driver: bridge
